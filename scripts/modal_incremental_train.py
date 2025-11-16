@@ -34,7 +34,7 @@ image = (
 
 @app.function(
     image=image,
-    gpu="T4",
+    gpu="A100",
     timeout=7200,  # 2 hours
     volumes={"/data": modal.Volume.from_name("chess-data", create_if_missing=True)},
     secrets=[modal.Secret.from_name("huggingface-secret")]  # Store HF_TOKEN in Modal secrets

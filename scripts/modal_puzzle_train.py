@@ -85,7 +85,7 @@ def train_on_puzzles(
     print("="*60)
     
     # Setup
-    model_path = "/data/chess_model_puzzles.pth"
+    model_path = "/data/chess_model_v2.pth"  # Continue V2 evolution
     cache_dir = "/data/puzzle_cache"
     
     # Initialize model
@@ -100,20 +100,18 @@ def train_on_puzzles(
     best_acc = 0.0
     
     if continue_from_v2:
-        # Try V3 first, then V2
-        for model_name in ["chess_model_v3.pth", "chess_model_v2.pth"]:
-            temp_path = f"/data/{model_name}"
-            downloaded = download_model(HF_REPO_ID, model_name, temp_path)
-            if downloaded and os.path.exists(temp_path):
-                checkpoint = load_checkpoint(model, temp_path, device)
-                starting_epoch = checkpoint.get('epoch', 0)
-                best_acc = checkpoint.get('best_acc', 0.0)
-                print(f"  ✓ Loaded {model_name}")
-                print(f"  Starting from epoch: {starting_epoch}")
-                print(f"  Best accuracy: {best_acc:.2f}%")
-                break
+        # Load existing V2 checkpoint
+        downloaded = download_model(HF_REPO_ID, "chess_model_v2.pth", model_path)
+        if downloaded and os.path.exists(model_path):
+            checkpoint = load_checkpoint(model, model_path, device)
+            starting_epoch = checkpoint.get('epoch', 0)
+            best_acc = checkpoint.get('best_acc', 0.0)
+            print(f"  ✓ Loaded chess_model_v2.pth")
+            print(f"  Starting from epoch: {starting_epoch}")
+            print(f"  Best accuracy: {best_acc:.2f}%")
+            print(f"  Will continue training with puzzle data")
         else:
-            print("  ⚠ No V2/V3 checkpoint found, starting fresh")
+            print("  ⚠ No V2 checkpoint found, starting fresh")
     
     # Load puzzle database
     print("\n[2/5] Loading Lichess puzzles...")
@@ -177,7 +175,7 @@ def train_on_puzzles(
     upload_success = upload_model(
         model_path=model_path,
         repo_id=HF_REPO_ID,
-        filename="chess_model_puzzles.pth",
+        filename="chess_model_v2.pth",  # Same file, continuous evolution
         commit_message=commit_msg
     )
     
@@ -190,6 +188,7 @@ def train_on_puzzles(
     print(f"Final Epoch: {results['final_epoch']}")
     print(f"Best Accuracy: {results['best_acc']:.2f}%")
     print(f"Upload Success: {upload_success}")
+    print(f"Model saved as: chess_model_v2.pth (continuous evolution)")
     print("\n💡 Model trained on winning moves from tactical puzzles!")
     print("="*60 + "\n")
     

@@ -6,18 +6,15 @@ HF_MODEL_FILENAME = "chess_model.pth"
 
 # Data processing settings
 MAX_POSITIONS = 500000
-MIN_RATING = 1800
-SKIP_OPENING_MOVES = 10
+MIN_RATING = 300
+SKIP_OPENING_MOVES = 0
 
 # Lichess database URLs (add more datasets as needed)
 LICHESS_DATASETS = [
-    "https://database.lichess.org/standard/lichess_db_standard_rated_2018-01.pgn.zst",
+    "https://database.lichess.org/standard/lichess_db_standard_rated_2015-12.pgn.zst",
 ]
 
 # Training hyperparameters
-BATCH_SIZE = 64
-LEARNING_RATE = 0.0001  # Lower LR for fine-tuning
-EPOCHS = 5  # Fewer epochs for incremental training
 TRAIN_SPLIT = 0.9
 
 # Model architecture
@@ -29,3 +26,13 @@ OUTPUT_SIZE = 4096  # 64 from_squares × 64 to_squares
 MODAL_GPU = "T4"
 MODAL_TIMEOUT = 7200  # 2 hours
 MODAL_VOLUME_NAME = "chess-data"
+
+USE_V2_MODEL = True  # Enable V2
+USE_VALUE_HEAD = True  # Enable position evaluation
+VALUE_LOSS_WEIGHT = 0.1  # Weight for value loss
+NUM_RESIDUAL_BLOCKS = 4  # Depth of network
+INCLUDE_PIECE_VALUES = True  # Include material channel
+
+LEARNING_RATE = 0.00005  # Lower LR for deeper network
+BATCH_SIZE = 32  # Reduce if GPU memory limited
+EPOCHS = 10  # V2 needs more epochs initially

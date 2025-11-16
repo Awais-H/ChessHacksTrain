@@ -35,4 +35,4 @@ INCLUDE_PIECE_VALUES = True  # Include material channel
 
 LEARNING_RATE = 0.00005  # Lower LR for deeper network
 BATCH_SIZE = 64
-EPOCHS = 5  # V2 needs more epochs initially
+EPOCHS = 10  # V2 needs more epochs initially
